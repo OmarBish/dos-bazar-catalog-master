@@ -19,6 +19,11 @@ read_replicas = ['https://dos-bazar-catalog-read-1.herokuapp.com','https://dos-b
 #build database 
 if(os.path.exists('bazar.db')):
     os.remove('bazar.db')
+
+from pathlib import Path
+Path('bazar.db').touch()
+
+
 conn = sqlite3.connect('bazar.db')
 cursor = conn.cursor()
 cursor.execute('''CREATE TABLE books
