@@ -60,6 +60,7 @@ def query():
         status = 201
         updateReplicas(sqlite_query)
         invalidateFrontendCache(data['id'])
+        invalidateFrontendCache('books')
     else:
         res={
             'message':'unsupported operation'
