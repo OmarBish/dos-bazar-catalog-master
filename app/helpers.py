@@ -21,8 +21,8 @@ def invalidateFrontendCache(base):
         'id':base,
     }
     try:    
-        # requests.post( "http://127.0.0.1:3000"+"/cleare-cache" ,json=body,timeout=0.001)
-        print("invalidate cache for: "+ base)
+        # requests.post( "http://127.0.0.1:3000"+"/cleare-cache" ,json=body,timeout=0.01)
+        print("invalidate cache for: "+ str(base))
         requests.post( "https://dos-bazar-front-end-server.herokuapp.com/cleare-cache" ,json=body,timeout=0.01)
     except requests.exceptions.ReadTimeout:
         return

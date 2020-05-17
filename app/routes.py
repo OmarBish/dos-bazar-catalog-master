@@ -40,6 +40,7 @@ def query():
         
         updateReplicas(sqlite_query)
         
+        invalidateFrontendCache(cursor.lastrowid)
         invalidateFrontendCache('books')
         
 
@@ -54,11 +55,11 @@ def query():
         cursor.execute(sqlite_query)
         conn.commit()
         res ={
-            'id':cursor.lastrowid
+            'id':data['id']
         } 
         status = 201
         updateReplicas(sqlite_query)
-        invalidateFrontendCache(cursor.lastrowid)
+        invalidateFrontendCache(data['id'])
     else:
         res={
             'message':'unsupported operation'
