@@ -10,6 +10,10 @@ import sqlite3
 app = Flask(__name__, instance_relative_config=True)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+read_replicas = ['https://dos-bazar-catalog-read-1.herokuapp.com','https://dos-bazar-catalog-read-2.herokuapp.com']
+
+
 #build database 
 if(os.path.exists('bazar.db')):
     os.remove('bazar.db')

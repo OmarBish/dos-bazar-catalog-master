@@ -2,11 +2,12 @@ from flask import redirect,request,jsonify
 import os
 import requests
 import sqlite3
+import threading
 
 
 # local imports
 from app import app
-
+from app.helpers import updateReplicas,invalidateFrontendCache
 #TODO: redirct all unwanted routes to root dir
 # index route, redirect to api dcumentation url
 @app.route('/')
@@ -37,6 +38,12 @@ def query():
             'id':cursor.lastrowid
         } 
         status = 201
+        thread1 = threading.Thread(target=updateReplicas, args=(sqlite_query))
+        thread1.start()
+        thread2 = threading.Thread(target=invalidateFrontendCache, args=(data))
+        thread2.start()
+        
+
     elif sqlite_query.startswith('SELECT'):
         cursor.execute(sqlite_query)
         records = cursor.fetchall()
@@ -51,6 +58,11 @@ def query():
             'id':cursor.lastrowid
         } 
         status = 201
+        thread = threading.Thread(target=updateReplicas, args=(sqlite_query))
+        thread.start()
+        thread2 = threading.Thread(target=invalidateFrontendCache, args=(data))
+        thread2.start()
+
     else:
         res={
             'message':'unsupported operation'
