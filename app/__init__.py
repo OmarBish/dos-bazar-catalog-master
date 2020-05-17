@@ -14,24 +14,26 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 read_replicas = ['https://dos-bazar-catalog-read-1.herokuapp.com','https://dos-bazar-catalog-read-2.herokuapp.com']
+# read_replicas = ["http://127.0.0.1:5001","http://127.0.0.1:5002"]
 
 
 #build database 
 if(os.path.exists('bazar.db')):
     os.remove('bazar.db')
 
-from pathlib import Path
-Path('bazar.db').touch()
+try:
+    conn = sqlite3.connect('bazar.db')
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE books
+                (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                title varchar(64) NOT NULL,
+                amount INTEGER NOT NULL)''')
+    cursor.close()
+    conn.close()
+except :
+    pass
 
 
-conn = sqlite3.connect('bazar.db')
-cursor = conn.cursor()
-cursor.execute('''CREATE TABLE books
-             (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-              title varchar(64) NOT NULL,
-              amount INTEGER NOT NULL)''')
-cursor.close()
-conn.close()
 
 #get routes
 from app import routes

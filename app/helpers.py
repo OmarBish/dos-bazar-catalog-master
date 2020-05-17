@@ -14,14 +14,13 @@ def updateReplicas(sqlite_query):
         except requests.exceptions.ReadTimeout:
             continue
 
-def invalidateFrontendCache(query):
+def invalidateFrontendCache(base):
     
     body = {
-        'base':'catalog',
-        'route':'/query',
-        'query':query
+        'id':base,
     }
-    try:
+    try:    
+        # requests.post( "http://127.0.0.1:3000"+"/cleare-cache" ,json=body,timeout=0.001)
         requests.post( "https://dos-bazar-front-end-server.herokuapp.com/cleare-cache" ,json=body,timeout=0.001)
     except requests.exceptions.ReadTimeout:
         return

@@ -40,7 +40,7 @@ def query():
         
         updateReplicas(sqlite_query)
         
-        invalidateFrontendCache(sqlite_query)
+        invalidateFrontendCache('books')
         
 
     elif sqlite_query.startswith('SELECT'):
@@ -58,7 +58,7 @@ def query():
         } 
         status = 201
         updateReplicas(sqlite_query)
-        invalidateFrontendCache(sqlite_query)
+        invalidateFrontendCache(cursor.lastrowid)
     else:
         res={
             'message':'unsupported operation'
