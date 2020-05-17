@@ -9,14 +9,20 @@ def updateReplicas(sqlite_query):
             'sqlite_query':sqlite_query
         }
     for replica in read_replicas:
-        requests.post(replica + "/master-notification" ,json=body)
+        try:
+            requests.post(replica + "/master-notification" ,json=body,timeout=0.001)
+        except requests.exceptions.ReadTimeout:
+            continue
 
-def invalidateFrontendCache(body):
+def invalidateFrontendCache(query):
     
     body = {
         'base':'catalog',
         'route':'/query',
-        'body':body
+        'query':query
     }
-    requests.post( "https://dos-bazar-front-end-server.herokuapp.com/cleare-cache" ,json=body)
+    try:
+        requests.post( "https://dos-bazar-front-end-server.herokuapp.com/cleare-cache" ,json=body,timeout=0.001)
+    except requests.exceptions.ReadTimeout:
+        return
         

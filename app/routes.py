@@ -2,7 +2,6 @@ from flask import redirect,request,jsonify
 import os
 import requests
 import sqlite3
-import threading
 
 
 # local imports
@@ -38,10 +37,10 @@ def query():
             'id':cursor.lastrowid
         } 
         status = 201
-        thread1 = threading.Thread(target=updateReplicas, args=(sqlite_query))
-        thread1.start()
-        thread2 = threading.Thread(target=invalidateFrontendCache, args=(data))
-        thread2.start()
+        
+        updateReplicas(sqlite_query)
+        
+        invalidateFrontendCache(sqlite_query)
         
 
     elif sqlite_query.startswith('SELECT'):
@@ -58,11 +57,8 @@ def query():
             'id':cursor.lastrowid
         } 
         status = 201
-        thread = threading.Thread(target=updateReplicas, args=(sqlite_query))
-        thread.start()
-        thread2 = threading.Thread(target=invalidateFrontendCache, args=(data))
-        thread2.start()
-
+        updateReplicas(sqlite_query)
+        invalidateFrontendCache(sqlite_query)
     else:
         res={
             'message':'unsupported operation'
